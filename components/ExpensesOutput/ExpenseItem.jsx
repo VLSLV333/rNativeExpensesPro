@@ -6,7 +6,7 @@ import { GlobalStyles } from '../../constants/styles';
 
 const color = GlobalStyles.colors;
 
-export default function ExpenseItem({ title, amount, date, id }) {
+export default function ExpenseItem({ description, amount, date, id }) {
   const navigation = useNavigation();
 
   const itemPressHandler = () => {
@@ -24,7 +24,7 @@ export default function ExpenseItem({ title, amount, date, id }) {
         android_ripple={color.primary700}
       >
         <View>
-          <Text style={[styles.textBase, styles.description]}>{title}</Text>
+          <Text style={[styles.textBase, styles.description]}>{description}</Text>
           <Text style={styles.textBase}>
             {new Date(date).toLocaleString([], {
               year: 'numeric',
