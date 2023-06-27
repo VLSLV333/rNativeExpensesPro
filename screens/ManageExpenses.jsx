@@ -16,6 +16,8 @@ import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 import formatDate from "../helpers/formateDate";
 import replaceSignsInDate from "../helpers/replaceSignsInDate";
 
+import { storeExpense } from "../helpers/httpRequests";
+
 import { GlobalStyles } from "../constants/styles";
 
 const color = GlobalStyles.colors;
@@ -138,6 +140,16 @@ export default function ManageExpense({ route, navigation }) {
           isValid: { ...inputValues.isValid },
         })
       );
+      const objectForFirebase = {
+        // values: {
+        description: inputValues.values.description,
+        date: inputValues.values.date,
+        amount: inputValues.values.amount,
+        // },
+        // isValid: { amount: true, date: true, description: true },
+      };
+
+      storeExpense(objectForFirebase);
     }
     navigation.goBack();
   };

@@ -1,6 +1,10 @@
-import ExpensesOutput from '../components/ExpensesOutput/ExpensesOutput';
+import { useEffect } from "react";
 
-import { useSelector } from 'react-redux';
+import ExpensesOutput from "../components/ExpensesOutput/ExpensesOutput";
+
+import { useSelector } from "react-redux";
+
+import { fetchExpenses } from "../helpers/httpRequests";
 
 export default function RecentExpenses() {
   const weekAgo = new Date().getDate() - 7;
@@ -9,11 +13,15 @@ export default function RecentExpenses() {
     (expense) => new Date(expense.values.date).getDate() >= weekAgo
   );
 
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
+
   return (
     <ExpensesOutput
       expenses={recentExpensesArr}
-      period={'Last 7 days'}
-      fallbackTxt={'Please, create your first expense:)'}
+      period={"Last 7 days"}
+      fallbackTxt={"Please, create your first expense:)"}
     />
   );
 }

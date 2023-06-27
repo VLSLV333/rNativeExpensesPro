@@ -1,184 +1,186 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = [
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought PS5",
-      date: new Date().getTime(),
-      amount: "25",
-    },
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought house",
-      date: new Date("2023-05-25").getTime(),
-      amount: "45",
-    },
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought Lambo",
-      date: new Date("2022-05-10").getTime(),
-      amount: "155",
-    },
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought PS5",
-      date: new Date().getTime(),
-      amount: "25",
-    },
+const initialState = [];
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought house",
-      date: new Date("2023-05-25").getTime(),
-      amount: "45",
-    },
+// const initialState = [
+  // {
+  //   values: {
+  //     id: Math.random(),
+  //     description: "Bought PS5",
+  //     date: new Date().getTime(),
+  //     amount: "25",
+  //   },
+  //   isValid: { amount: true, date: true, description: true },
+  // },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought house",
+//       date: new Date("2023-05-25").getTime(),
+//       amount: "45",
+//     },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought Lambo",
+//       date: new Date("2022-05-10").getTime(),
+//       amount: "155",
+//     },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought PS5",
+//       date: new Date().getTime(),
+//       amount: "25",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought Lambo",
-      date: new Date("2022-05-10").getTime(),
-      amount: "155",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought house",
+//       date: new Date("2023-05-25").getTime(),
+//       amount: "45",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought PS5",
-      date: new Date().getTime(),
-      amount: "25",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought Lambo",
+//       date: new Date("2022-05-10").getTime(),
+//       amount: "155",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought house",
-      date: new Date("2023-05-25").getTime(),
-      amount: "45",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought PS5",
+//       date: new Date().getTime(),
+//       amount: "25",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought Lambo",
-      date: new Date("2022-05-10").getTime(),
-      amount: "155",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought house",
+//       date: new Date("2023-05-25").getTime(),
+//       amount: "45",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought PS5",
-      date: new Date().getTime(),
-      amount: "25",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought Lambo",
+//       date: new Date("2022-05-10").getTime(),
+//       amount: "155",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought house",
-      date: new Date("2023-05-25").getTime(),
-      amount: "45",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought PS5",
+//       date: new Date().getTime(),
+//       amount: "25",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought Lambo",
-      date: new Date("2022-05-10").getTime(),
-      amount: "155",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought house",
+//       date: new Date("2023-05-25").getTime(),
+//       amount: "45",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought PS5",
-      date: new Date().getTime(),
-      amount: "25",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought Lambo",
+//       date: new Date("2022-05-10").getTime(),
+//       amount: "155",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought house",
-      date: new Date("2023-05-25").getTime(),
-      amount: "45",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought PS5",
+//       date: new Date().getTime(),
+//       amount: "25",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought Lambo",
-      date: new Date("2022-05-10").getTime(),
-      amount: "155",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought house",
+//       date: new Date("2023-05-25").getTime(),
+//       amount: "45",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought PS5",
-      date: new Date().getTime(),
-      amount: "25",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought Lambo",
+//       date: new Date("2022-05-10").getTime(),
+//       amount: "155",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought house",
-      date: new Date("2023-05-25").getTime(),
-      amount: "45",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought PS5",
+//       date: new Date().getTime(),
+//       amount: "25",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-  {
-    values: {
-      id: Math.random(),
-      description: "Bought Lambo",
-      date: new Date("2022-05-10").getTime(),
-      amount: "155",
-    },
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought house",
+//       date: new Date("2023-05-25").getTime(),
+//       amount: "45",
+//     },
 
-    isValid: { amount: true, date: true, description: true },
-  },
-];
+//     isValid: { amount: true, date: true, description: true },
+//   },
+//   {
+//     values: {
+//       id: Math.random(),
+//       description: "Bought Lambo",
+//       date: new Date("2022-05-10").getTime(),
+//       amount: "155",
+//     },
+
+//     isValid: { amount: true, date: true, description: true },
+//   },
+// ];
 
 const expensesSlice = createSlice({
   name: "expensesSlice",
@@ -188,7 +190,9 @@ const expensesSlice = createSlice({
       state.unshift(payload);
     },
     removeExpense: (state, { payload }) => {
-      const expenseToChange = state.find((expense) => expense.values.id === payload);
+      const expenseToChange = state.find(
+        (expense) => expense.values.id === payload
+      );
       state.splice(state.indexOf(expenseToChange), 1);
     },
     editExpense: (state, { payload }) => {
@@ -197,9 +201,12 @@ const expensesSlice = createSlice({
       );
       state.splice(state.indexOf(expenseToChange), 1, payload);
     },
+    setInitialState: (state, { payload }) => {
+      return state = payload;
+    },
   },
 });
 
-export const { addExpense, editExpense, removeExpense } = expensesSlice.actions;
+export const { addExpense, editExpense, removeExpense, setInitialState } = expensesSlice.actions;
 
 export default expensesSlice.reducer;

@@ -1,23 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
+import { useEffect } from "react";
 
-import IconButton from './components/UI/IconButton';
+import { StatusBar } from "expo-status-bar";
 
-import { NavigationContainer } from '@react-navigation/native';
+import { fetchExpensesData } from "./store/expensesAsync";
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useDispatch } from "react-redux";
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import IconButton from "./components/UI/IconButton";
 
-import AllExpenses from './screens/AllExpenses';
-import RecentExpenses from './screens/RecentExpenses';
-import ManageExpense from './screens/ManageExpenses';
+import { NavigationContainer } from "@react-navigation/native";
 
-import { Provider } from 'react-redux';
-import store from './store/store';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { Ionicons } from '@expo/vector-icons';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { GlobalStyles } from './constants/styles';
+import AllExpenses from "./screens/AllExpenses";
+import RecentExpenses from "./screens/RecentExpenses";
+import ManageExpense from "./screens/ManageExpenses";
+
+import { Provider } from "react-redux";
+import store from "./store/store";
+
+import { Ionicons } from "@expo/vector-icons";
+
+import { GlobalStyles } from "./constants/styles";
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -25,6 +31,10 @@ const BottomTab = createBottomTabNavigator();
 const color = GlobalStyles.colors;
 
 function BottomTabScreens() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchExpensesData());
+  }, []);
   return (
     <BottomTab.Navigator
       screenOptions={({ navigation }) => ({
@@ -42,10 +52,10 @@ function BottomTabScreens() {
             name="add"
             color={tintColor}
             size={33}
-            onPress={() => navigation.navigate('ManageExpenses')}
+            onPress={() => navigation.navigate("ManageExpenses")}
           />
         ),
-        headerTintColor: 'white',
+        headerTintColor: "white",
         tabBarStyle: {
           backgroundColor: color.primary500,
           elevation: 0,
@@ -60,7 +70,7 @@ function BottomTabScreens() {
         name="RecentExpenses"
         component={RecentExpenses}
         options={{
-          title: 'Recent',
+          title: "Recent",
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} size={size} name="hourglass-outline" />
           ),
@@ -70,7 +80,7 @@ function BottomTabScreens() {
         name="AllExpenses"
         component={AllExpenses}
         options={{
-          title: 'All Expenses',
+          title: "All Expenses",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-outline" color={color} size={size} />
           ),
@@ -91,7 +101,7 @@ export default function App() {
               headerStyle: {
                 backgroundColor: color.primary500,
               },
-              headerTintColor: 'white',
+              headerTintColor: "white",
             }}
           >
             <Stack.Screen
@@ -103,12 +113,12 @@ export default function App() {
               name="ManageExpenses"
               component={ManageExpense}
               options={({ navigation }) => ({
-                presentation: 'modal',
+                presentation: "modal",
                 headerRight: ({ tintColor }) => (
                   <IconButton
                     size={33}
                     color={tintColor}
-                    name={'close-outline'}
+                    name={"close-outline"}
                     onPress={() => navigation.goBack()}
                     style={{ paddingRight: 0 }}
                   />
