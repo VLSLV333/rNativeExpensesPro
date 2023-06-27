@@ -13,14 +13,16 @@ export default function MyInput({
   maskType,
   maskFormat,
   multi,
+  inputStyle,
+  textStyle
 }) {
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, textStyle]}>{label}</Text>
       {!masked && (
         <TextInput
           {...textInputConfig}
-          style={[styles.input, multi && styles.inputMulti]}
+          style={[styles.input, multi && styles.inputMulti, inputStyle]}
         />
       )}
       {masked && (
@@ -30,7 +32,7 @@ export default function MyInput({
             format: maskFormat,
           }}
           {...textInputConfig}
-          style={styles.input}
+          style={[styles.input, inputStyle]}
         />
       )}
     </View>
@@ -54,6 +56,8 @@ const styles = StyleSheet.create({
     padding: 7,
     borderRadius: 7,
     fontSize: 18,
+    borderWidth: 1,
+    borderColor: color.primary800,
   },
   inputMulti: {
     textAlignVertical: "top",

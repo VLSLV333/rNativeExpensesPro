@@ -5,7 +5,7 @@ import { GlobalStyles } from '../../constants/styles';
 const color = GlobalStyles.colors;
 
 export default function ExpensesSummary({ expenses, period }) {
-  const amount = expenses.reduce((sum, exspense) => sum + +exspense.amount, 0);
+  const amount = expenses.reduce((sum, exspense) => sum + +exspense.values.amount, 0);
 
   return (
     <View style={styles.rootContainer}>

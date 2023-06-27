@@ -2,7 +2,7 @@ export default function formatDate(date) {
   let dateString = "";
 
   const year = new Date(date).getFullYear();
-  let month = new Date(date).getMonth();
+  let month = new Date(date).getMonth() + 1;
   const day = new Date(date).getDate();
 
   if (year) {
@@ -11,8 +11,6 @@ export default function formatDate(date) {
     }
     dateString = "" + year + month + day;
   }
-//   console.log(dateString);
-
 
   return dateString;
 }

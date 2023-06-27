@@ -1,4 +1,6 @@
-import { useLayoutEffect, useState, useEffect } from "react";
+import { useLayoutEffect, useState } from "react";
+
+import { Alert } from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
 import { removeExpense, editExpense, addExpense } from "../store/expensesSlice";
@@ -11,23 +13,34 @@ import MyButton from "../components/UI/MyButton";
 
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 
+import formatDate from "../helpers/formateDate";
+import replaceSignsInDate from "../helpers/replaceSignsInDate";
+
 import { GlobalStyles } from "../constants/styles";
 
 const color = GlobalStyles.colors;
 
 export default function ManageExpense({ route, navigation }) {
-  const [inputValues, setInputValues] = useState({
-    amount: "",
-    date: "",
-    description: "",
-  });
-
   const expenseIdToChange = route?.params?.id;
   const isEditing = !!expenseIdToChange;
 
-  const expenseToEdit = useSelector((state) => state.expensesSlice).filter(
-    (expense) => expense.id === expenseIdToChange
-  )[0];
+  let amountIsValid = null;
+  let dateIsValid = null;
+  let descriptionValid = null;
+
+  const expenseToEdit = useSelector((state) => state.expensesSlice).find(
+    (expense) => expense.values.id === expenseIdToChange
+  );
+
+  const [inputValues, setInputValues] = useState({
+    values: {
+      amount: expenseToEdit ? expenseToEdit.values.amount : "",
+      date: expenseToEdit ? formatDate(expenseToEdit.values.date) : "",
+      description: expenseToEdit ? expenseToEdit.values.description : "",
+      id: expenseToEdit ? expenseToEdit.values.id : Math.random(),
+    },
+    isValid: { amount: true, date: true, description: true },
+  });
 
   const dispatch = useDispatch();
 
@@ -49,26 +62,85 @@ export default function ManageExpense({ route, navigation }) {
   };
 
   const changeHandler = (mode) => {
+    amountIsValid =
+      !isNaN(Number(inputValues.values.amount.split(",").join("."))) &&
+      Number(inputValues.values.amount.split(",").join(".")) > 0;
+    dateIsValid =
+      new Date(replaceSignsInDate(inputValues.values.date)).toString() !==
+      "Invalid Date";
+    descriptionValid = inputValues.values.description.trim().length > 0;
+
+    if (amountIsValid || dateIsValid || descriptionValid) {
+      if (amountIsValid) {
+        setInputValues((state) => ({
+          values: state.values,
+          isValid: { ...state.isValid, amount: amountIsValid },
+        }));
+      }
+      if (dateIsValid) {
+        setInputValues((state) => ({
+          values: state.values,
+          isValid: { ...state.isValid, date: dateIsValid },
+        }));
+      }
+      if (descriptionValid) {
+        setInputValues((state) => ({
+          values: state.values,
+          isValid: { ...state.isValid, description: descriptionValid },
+        }));
+      }
+    }
+
+    if (!amountIsValid || !dateIsValid || !descriptionValid) {
+      if (!amountIsValid) {
+        setInputValues((state) => ({
+          values: state.values,
+          isValid: { ...state.isValid, amount: amountIsValid },
+        }));
+      }
+      if (!dateIsValid) {
+        setInputValues((state) => ({
+          values: state.values,
+          isValid: { ...state.isValid, date: dateIsValid },
+        }));
+      }
+      if (!descriptionValid) {
+        setInputValues((state) => ({
+          values: state.values,
+          isValid: { ...state.isValid, description: descriptionValid },
+        }));
+      }
+      return;
+    }
+
     if (mode) {
-      dispatch(editExpense(inputValues));
+      dispatch(
+        editExpense({
+          values: {
+            ...inputValues.values,
+            date: replaceSignsInDate(inputValues.values.date),
+            description: inputValues.values.description.trim(),
+            amount: inputValues.values.amount.split(",").join("."),
+          },
+          isValid: { ...inputValues.isValid },
+        })
+      );
     } else {
       dispatch(
-        //insert real input
         addExpense({
-          ...formObj,
-          date: new Date(formObj.date).getTime(),
-          id: Math.random(),
+          values: {
+            ...inputValues.values,
+            date: new Date(
+              replaceSignsInDate(inputValues.values.date)
+            ).getTime(),
+            amount: inputValues.values.amount.split(",").join("."),
+          },
+          isValid: { ...inputValues.isValid },
         })
       );
     }
     navigation.goBack();
   };
-
-  useEffect(() => {
-    if (expenseToEdit?.id) {
-      setInputValues(expenseToEdit);
-    }
-  }, [expenseToEdit]);
 
   return (
     <View style={styles.rootContainer}>

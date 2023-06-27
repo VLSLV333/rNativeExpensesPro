@@ -6,7 +6,7 @@ export default function RecentExpenses() {
   const weekAgo = new Date().getDate() - 7;
 
   const recentExpensesArr = useSelector((state) => state.expensesSlice).filter(
-    (expense) => new Date(expense.date).getDate() >= weekAgo
+    (expense) => new Date(expense.values.date).getDate() >= weekAgo
   );
 
   return (

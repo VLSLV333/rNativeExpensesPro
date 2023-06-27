@@ -23,7 +23,7 @@ export default function ExpenseItem({ description, amount, date, id }) {
         ]}
         android_ripple={color.primary700}
       >
-        <View>
+        <View style={styles.flex1}>
           <Text style={[styles.textBase, styles.description]}>{description}</Text>
           <Text style={styles.textBase}>
             {new Date(date).toLocaleString([], {
@@ -44,12 +44,16 @@ export default function ExpenseItem({ description, amount, date, id }) {
 }
 
 const styles = StyleSheet.create({
+  flex1: {
+    flex: 1
+  },
   rootContainer: {
     padding: 12,
     marginTop: 8,
     backgroundColor: color.primary500,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     borderRadius: 7,
     elevation: 3,
     shadowColor: color.gray500,
@@ -76,6 +80,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 4,
     width: 80,
+    height: 40,
   },
   amount: {
     color: color.primary500,
