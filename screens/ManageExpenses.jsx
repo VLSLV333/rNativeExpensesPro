@@ -1,11 +1,16 @@
-import { useLayoutEffect, useState } from "react";
-
-import { Alert } from "react-native";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 import { removeExpense, editExpense, addExpense } from "../store/expensesSlice";
 
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { setLoading, setError } from "../store/appStateSlice";
+import LoadingOverlay from "../components/UI/LoadingOverlay";
+
+import { setAddInput } from "../store/storeAddInputSlice";
+
+import ErrorOverlay from "../components/UI/ErrorOverlay";
+
+import { StyleSheet, View } from "react-native";
 
 import IconButton from "../components/UI/IconButton";
 
@@ -16,7 +21,11 @@ import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 import formatDate from "../helpers/formateDate";
 import replaceSignsInDate from "../helpers/replaceSignsInDate";
 
-import { storeExpense } from "../helpers/httpRequests";
+import {
+  storeExpense,
+  updateExpense,
+  deleteExpense,
+} from "../helpers/httpRequests";
 
 import { GlobalStyles } from "../constants/styles";
 
@@ -34,36 +43,123 @@ export default function ManageExpense({ route, navigation }) {
     (expense) => expense.values.id === expenseIdToChange
   );
 
-  const [inputValues, setInputValues] = useState({
-    values: {
-      amount: expenseToEdit ? expenseToEdit.values.amount : "",
-      date: expenseToEdit ? formatDate(expenseToEdit.values.date) : "",
-      description: expenseToEdit ? expenseToEdit.values.description : "",
-      id: expenseToEdit ? expenseToEdit.values.id : Math.random(),
-    },
-    isValid: { amount: true, date: true, description: true },
-  });
+  const loading = useSelector((state) => state.appStateSlice.loading);
+
+  const errorMsg = useSelector((state) => state.appStateSlice.errorMessage);
+
+  const savedAddInput = useSelector((state) => state.storeAddInputSlice);
+
+  const [inputValues, setInputValues] = useState({});
+
+  useEffect(() => {
+    if (isEditing) {
+      setInputValues({
+        values: {
+          amount: expenseToEdit?.values ? expenseToEdit?.values?.amount : "",
+          date: formatDate(expenseToEdit.values.date),
+          description: expenseToEdit.values.description,
+        },
+        isValid: { amount: true, date: true, description: true },
+      });
+    } else {
+      setInputValues({
+        values: {
+          amount: savedAddInput ? savedAddInput.amount : "",
+          date: savedAddInput ? replaceSignsInDate(savedAddInput.date) : "",
+          description: savedAddInput ? savedAddInput.description : "",
+        },
+        isValid: { amount: true, date: true, description: true },
+      });
+    }
+  }, [isEditing, savedAddInput]);
 
   const dispatch = useDispatch();
 
+  const errorButtonHanlder = () => {
+    dispatch(setLoading(false));
+    dispatch(setError(null));
+  };
+
   useLayoutEffect(() => {
     if (isEditing) {
-      navigation.setOptions({ title: "Edit Expense" });
+      navigation.setOptions({
+        title: "Edit Expense",
+        headerRight: ({ tintColor }) => (
+          <>
+            {!errorMsg && (
+              <IconButton
+                size={33}
+                color={tintColor}
+                name={"close-outline"}
+                onPress={() => navigation.goBack()}
+                style={{ paddingRight: 0 }}
+              />
+            )}
+            {errorMsg && (
+              <IconButton
+                size={33}
+                color={tintColor}
+                name={"close-outline"}
+                onPress={() => errorButtonHanlder()}
+                style={{ paddingRight: 0 }}
+              />
+            )}
+          </>
+        ),
+      });
     } else {
-      navigation.setOptions({ title: "Add Expense" });
+      navigation.setOptions({
+        title: "Add Expense",
+        headerRight: ({ tintColor }) => (
+          <>
+            {!errorMsg && (
+              <IconButton
+                size={33}
+                color={tintColor}
+                name={"close-outline"}
+                onPress={() => navigation.goBack()}
+                style={{ paddingRight: 0 }}
+              />
+            )}
+            {errorMsg && (
+              <IconButton
+                size={33}
+                color={tintColor}
+                name={"close-outline"}
+                onPress={() => errorButtonHanlder()}
+                style={{ paddingRight: 0 }}
+              />
+            )}
+          </>
+        ),
+      });
     }
-  }, [isEditing, navigation]);
+  }, [isEditing, navigation, errorMsg]);
 
   const cancelHandler = () => {
     navigation.goBack();
   };
 
-  const deleteHandler = () => {
-    dispatch(removeExpense(expenseIdToChange));
-    navigation.goBack();
+  const deleteHandler = async () => {
+    dispatch(setLoading(true));
+
+    try {
+      await deleteExpense(expenseIdToChange);
+      dispatch(removeExpense(expenseIdToChange));
+      navigation.goBack();
+      dispatch(setLoading(false));
+      dispatch(setError(null));
+    } catch (e) {
+      dispatch(setLoading(false));
+      dispatch(
+        setError(
+          "Couldn`t delete expense:( Please, check internet connection and try again"
+        )
+      );
+    }
   };
 
-  const changeHandler = (mode) => {
+  const changeHandler = async (mode) => {
     amountIsValid =
       !isNaN(Number(inputValues.values.amount.split(",").join("."))) &&
       Number(inputValues.values.amount.split(",").join(".")) > 0;
@@ -115,44 +211,98 @@ export default function ManageExpense({ route, navigation }) {
       return;
     }
 
-    if (mode) {
-      dispatch(
-        editExpense({
-          values: {
-            ...inputValues.values,
-            date: replaceSignsInDate(inputValues.values.date),
-            description: inputValues.values.description.trim(),
-            amount: inputValues.values.amount.split(",").join("."),
-          },
-          isValid: { ...inputValues.isValid },
-        })
-      );
-    } else {
-      dispatch(
-        addExpense({
-          values: {
-            ...inputValues.values,
-            date: new Date(
-              replaceSignsInDate(inputValues.values.date)
-            ).getTime(),
-            amount: inputValues.values.amount.split(",").join("."),
-          },
-          isValid: { ...inputValues.isValid },
-        })
-      );
-      const objectForFirebase = {
-        // values: {
-        description: inputValues.values.description,
-        date: inputValues.values.date,
-        amount: inputValues.values.amount,
-        // },
-        // isValid: { amount: true, date: true, description: true },
-      };
+    const objectForFirebase = {
+      description: inputValues.values.description,
+      date: inputValues.values.date,
+      amount: inputValues.values.amount,
+    };
 
-      storeExpense(objectForFirebase);
+    if (mode) {
+      dispatch(setLoading(true));
+
+      try {
+        await updateExpense(expenseIdToChange, objectForFirebase);
+
+        dispatch(
+          editExpense({
+            values: {
+              date: replaceSignsInDate(inputValues.values.date),
+              description: inputValues.values.description.trim(),
+              amount: inputValues.values.amount.split(",").join("."),
+              id: expenseIdToChange,
+            },
+            isValid: { ...inputValues.isValid },
+          })
+        );
+
+        navigation.goBack();
+        dispatch(setLoading(false));
+      } catch (e) {
+        dispatch(setLoading(false));
+        dispatch(
+          setError(
+            "Couldn`t update expense:( Please, check internet connection and try again"
+          )
+        );
+      }
+    } else {
+      dispatch(setLoading(true));
+      dispatch(setAddInput(objectForFirebase));
+
+      try {
+        const thisExpenseID = await storeExpense(objectForFirebase);
+
+        dispatch(
+          addExpense({
+            values: {
+              ...inputValues.values,
+              date: new Date(
+                replaceSignsInDate(inputValues.values.date)
+              ).getTime(),
+              amount: inputValues.values.amount.split(",").join("."),
+              id: thisExpenseID,
+            },
+            isValid: { ...inputValues.isValid },
+          })
+        );
+        navigation.goBack();
+        dispatch(setLoading(false));
+        dispatch(setAddInput(null));
+      } catch (e) {
+        dispatch(setLoading(false));
+        dispatch(
+          setError(
+            "Couldn`t add expense:( Please, check internet connection and try again"
+          )
+        );
+      }
     }
-    navigation.goBack();
   };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("transitionEnd", (e) => {
+      if (e.data.closing && errorMsg) {
+        dispatch(setLoading(false));
+        dispatch(setError(null));
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, errorMsg]);
+
+  if (loading) {
+    return <LoadingOverlay />;
+  }
+
+  if (errorMsg) {
+    return (
+      <ErrorOverlay
+        errorMessage={errorMsg}
+        onPress={errorButtonHanlder}
+        btnTxt="Close"
+      />
+    );
+  }
 
   return (
     <View style={styles.rootContainer}>

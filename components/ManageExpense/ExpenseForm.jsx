@@ -10,8 +10,8 @@ export default function ExpenseForm({ styleOuter, setFormObj, formObj }) {
   function inputChangeHandler(which, enteredValue) {
     setFormObj((state) => {
       return {
-        values: { ...state.values, [which]: enteredValue },
-        isValid: { ...state.isValid, [which]: true },
+        values: { ...state?.values, [which]: enteredValue },
+        isValid: { ...state?.isValid, [which]: true },
       };
     });
   }
@@ -22,7 +22,7 @@ export default function ExpenseForm({ styleOuter, setFormObj, formObj }) {
       <View
         style={[
           styles.dateAmountContainer,
-          (!formObj.isValid.amount || !formObj.isValid.date) &&
+          (!formObj?.isValid?.amount || !formObj?.isValid?.date) &&
             styles.dateAmountContainerWithError,
         ]}
       >
@@ -32,12 +32,12 @@ export default function ExpenseForm({ styleOuter, setFormObj, formObj }) {
             textInputConfig={{
               keyboardType: "decimal-pad",
               onChangeText: inputChangeHandler.bind(this, "amount"),
-              value: formObj.values.amount,
+              value: formObj?.values?.amount,
             }}
-            inputStyle={!formObj.isValid.amount && styles.inputError}
-            textStyle={!formObj.isValid.amount && styles.errorText}
+            inputStyle={!formObj?.isValid?.amount && styles.inputError}
+            textStyle={!formObj?.isValid?.amount && styles.errorText}
           />
-          {!formObj.isValid.amount && (
+          {!formObj?.isValid?.amount && (
             <Text style={styles.errorText}>Please, provide correct amount</Text>
           )}
         </View>
@@ -47,17 +47,17 @@ export default function ExpenseForm({ styleOuter, setFormObj, formObj }) {
             textInputConfig={{
               placeholder: "YYYY/MM/DD",
               onChangeText: inputChangeHandler.bind(this, "date"),
-              value: formObj.values.date,
+              value: formObj?.values?.date,
               maxLength: 10,
               autoCorrect: false,
             }}
             maskType={"datetime"}
             maskFormat={"YYYY/MM/DD"}
             masked={true}
-            inputStyle={!formObj.isValid.date && styles.inputError}
-            textStyle={!formObj.isValid.date && styles.errorText}
+            inputStyle={!formObj?.isValid?.date && styles.inputError}
+            textStyle={!formObj?.isValid?.date && styles.errorText}
           />
-          {!formObj.isValid.date && (
+          {!formObj?.isValid?.date && (
             <Text style={styles.errorText}>Please, provide correct date</Text>
           )}
         </View>
@@ -65,7 +65,7 @@ export default function ExpenseForm({ styleOuter, setFormObj, formObj }) {
       <View
         style={[
           styles.descriptionContainer,
-          !formObj.isValid.description && styles.descriptionContainerWithError,
+          !formObj?.isValid?.description && styles.descriptionContainerWithError,
         ]}
       >
         <MyInput
@@ -74,12 +74,12 @@ export default function ExpenseForm({ styleOuter, setFormObj, formObj }) {
           textInputConfig={{
             multiline: true,
             onChangeText: inputChangeHandler.bind(this, "description"),
-            value: formObj.values.description,
+            value: formObj?.values?.description,
           }}
-          inputStyle={!formObj.isValid.description && styles.inputError}
-          textStyle={!formObj.isValid.description && styles.errorText}
+          inputStyle={!formObj?.isValid?.description && styles.inputError}
+          textStyle={!formObj?.isValid?.description && styles.errorText}
         />
-        {!formObj.isValid.description && (
+        {!formObj?.isValid?.description && (
           <Text style={styles.errorText}>Please, provide description</Text>
         )}
       </View>

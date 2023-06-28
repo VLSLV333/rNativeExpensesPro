@@ -4,7 +4,7 @@ import { GlobalStyles } from '../../constants/styles';
 
 const color = GlobalStyles.colors;
 
-export default function MyButton({ children, onPress, mode, style }) {
+export default function MyButton({ children, onPress, mode, style, btnTextStyle }) {
   return (
     <View style={style}>
       <Pressable
@@ -17,7 +17,7 @@ export default function MyButton({ children, onPress, mode, style }) {
       >
         <View>
           <Text
-            style={[styles.buttonText, mode === 'flat' ? styles.flatText : {}]}
+            style={[styles.buttonText, mode === 'flat' ? styles.flatText : {}, btnTextStyle]}
           >
             {children}
           </Text>

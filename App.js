@@ -1,8 +1,4 @@
-import { useEffect } from "react";
-
 import { StatusBar } from "expo-status-bar";
-
-import { fetchExpensesData } from "./store/expensesAsync";
 
 import { useDispatch } from "react-redux";
 
@@ -31,10 +27,6 @@ const BottomTab = createBottomTabNavigator();
 const color = GlobalStyles.colors;
 
 function BottomTabScreens() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchExpensesData());
-  }, []);
   return (
     <BottomTab.Navigator
       screenOptions={({ navigation }) => ({
@@ -112,17 +104,8 @@ export default function App() {
             <Stack.Screen
               name="ManageExpenses"
               component={ManageExpense}
-              options={({ navigation }) => ({
+              options={() => ({
                 presentation: "modal",
-                headerRight: ({ tintColor }) => (
-                  <IconButton
-                    size={33}
-                    color={tintColor}
-                    name={"close-outline"}
-                    onPress={() => navigation.goBack()}
-                    style={{ paddingRight: 0 }}
-                  />
-                ),
               })}
             />
           </Stack.Navigator>

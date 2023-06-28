@@ -2,16 +2,18 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = [];
 
+// const initialState = { loading: true };
+
 // const initialState = [
-  // {
-  //   values: {
-  //     id: Math.random(),
-  //     description: "Bought PS5",
-  //     date: new Date().getTime(),
-  //     amount: "25",
-  //   },
-  //   isValid: { amount: true, date: true, description: true },
-  // },
+// {
+//   values: {
+//     id: Math.random(),
+//     description: "Bought PS5",
+//     date: new Date().getTime(),
+//     amount: "25",
+//   },
+//   isValid: { amount: true, date: true, description: true },
+// },
 //   {
 //     values: {
 //       id: Math.random(),
@@ -202,11 +204,12 @@ const expensesSlice = createSlice({
       state.splice(state.indexOf(expenseToChange), 1, payload);
     },
     setInitialState: (state, { payload }) => {
-      return state = payload;
+      return (state = payload);
     },
   },
 });
 
-export const { addExpense, editExpense, removeExpense, setInitialState } = expensesSlice.actions;
+export const { addExpense, editExpense, removeExpense, setInitialState } =
+  expensesSlice.actions;
 
 export default expensesSlice.reducer;

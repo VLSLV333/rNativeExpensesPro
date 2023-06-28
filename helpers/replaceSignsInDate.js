@@ -9,6 +9,12 @@ export default function replaceSignsInDate(date) {
 
   const splittedDate = date.split("/");
 
+  const correctlyBuildDate = date.split("-");
+
+  if (correctlyBuildDate.length > 1) {
+    return date;
+  }
+
   let answer = "";
 
   if (splittedDate.length === 1) {
