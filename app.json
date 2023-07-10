@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "rNativeExpensesPro",
-    "slug": "rNativeExpensesPro",
+    "name": "MetaChat",
+    "slug": "MetaChat2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +15,25 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "buildNumber": "1.0.0",
+      "bundleIdentifier": "com.vladyslavs.MetaChat2"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "versionCode": 1,
+      "package": "com.vladyslavs.MetaChat2"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0392b367-8015-42c2-8604-2bc2d84e2035"
+      }
     }
   }
 }
